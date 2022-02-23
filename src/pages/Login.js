@@ -1,21 +1,21 @@
-import { useNavigate } from 'react-router-dom'
-import { LoginForm } from '../components/LoginForm'
-const LoginPage =()=>{
-    const navigate = useNavigate()
-    return(
+import { useNavigate } from "react-router-dom";
+import { LoginForm } from "../components/LoginForm";
+const LoginPage = () => {
+  const navigate = useNavigate();
+  return (
     <>
-    <h1>
-        Login
-    </h1>
+      <h1>Login</h1>
 
-    <LoginForm/>
-    <h3 onClick={()=>{
-        navigate('/signup')
-    }}>
+      <LoginForm />
+      <h3
+        onClick={() => {
+          navigate("/signup");
+        }}
+      >
         signup
-    </h3>
+      </h3>
     </>
-    )
-}
+  );
+};
 
-export default LoginPage 
+export default LoginPage;
