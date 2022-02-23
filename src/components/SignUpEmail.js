@@ -6,12 +6,11 @@ import Button from '@mui/material/Button'
 import { useForm } from 'react-hook-form'
 import {useEffect, useState, useContext } from 'react'
 import { useNavigate } from 'react-router'
-import { FirebaseAuthData } from './handlers/UserContext'
+import { UserFirebaseAuth } from './handlers/UserContext'
 
 
 export const SignUpEmailForm =()=>{
     const navigate = useNavigate()
-    const currentUser = useContext(FirebaseAuthData)
     const [status, setStatus] = useState(false)
     const {
         register,
@@ -23,11 +22,13 @@ export const SignUpEmailForm =()=>{
         auth.createUserWithEmailAndPassword(email, password)
         .then((userCredentials)=>{
             let user = userCredentials.user
-            userExistHandler(user)
-            setStatus(true)
+            userExistHandler(user).then(()=>{
+                setStatus(true)
+            })
         }).catch((error)=>{
             console.log(error.message)
         })
+        
     }
     const handleLogin = async(data)=>{
         if(data.password === data.confirmPassword){
@@ -37,6 +38,11 @@ export const SignUpEmailForm =()=>{
             alert("Ensure that your passwords match")
         }
     }
+    useEffect(()=>{
+        if(status){
+            navigate('/')
+        }
+    })
 
     return(
         <>

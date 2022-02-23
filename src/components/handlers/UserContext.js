@@ -1,7 +1,7 @@
 import React,{ useContext, useEffect, useState } from "react";
 import { auth } from '../../base'
 
-let UserFirebaseAuth = React.createContext()
+export let UserFirebaseAuth = React.createContext()
 
 export const FirebaseAuthData =({ children })=>{
     const [currentUser, setCurrentUser] = useState({})
