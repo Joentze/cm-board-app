@@ -40,6 +40,10 @@ const ProfileForm = () => {
       });
   };
 
+  const handleSelect = (data) => {
+    //console.log"select change", data);
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit(handleForm)}>
@@ -60,7 +64,7 @@ const ProfileForm = () => {
             inputFormat="MM/dd/yyyy"
             value={date}
             onChange={(newValue) => {
-              console.log(newValue);
+              //console.lognewValue);
               setDate(newValue);
             }}
             renderInput={(params) => <TextField {...params} />}

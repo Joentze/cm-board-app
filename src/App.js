@@ -6,6 +6,8 @@ import "./App.css";
 import LoginPage from "./pages/Login";
 import SignUp from "./pages/Signup";
 import HomePage from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import DashboardPage from "./pages/Dashboard";
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/login" element={<LoginPage />} />
+            <Route exact path="/dashboard" element={<DashboardPage />} />
           </Routes>
         </Router>
       </FirebaseAuthData>

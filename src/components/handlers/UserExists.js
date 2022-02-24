@@ -8,9 +8,9 @@ export const userExistHandler = async (content) => {
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        console.log("has not signed in");
+        //console.log"has not signed in");
         //redirects you to sign up data form
-        //console.log(content.uid);
+        //console.logcontent.uid);
         db.collection("users").doc(content.uid).set({
           email: content.email,
           setProfile: false,

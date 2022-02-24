@@ -26,7 +26,7 @@ export const SignUpEmailForm = () => {
         });
       })
       .catch((error) => {
-        console.log(error.message);
+        //console.logerror.message)
       });
   };
   const handleLogin = async (data) => {

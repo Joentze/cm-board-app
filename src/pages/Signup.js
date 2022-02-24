@@ -7,11 +7,6 @@ import { auth } from "../base";
 const SignUp = () => {
   const navigate = useNavigate();
   const currentUser = useContext(FirebaseAuthData);
-  useEffect(() => {
-    if (!currentUser) {
-      console.log("changed to home");
-    }
-  }, []);
   return (
     <>
       <SignUpEmailForm />
