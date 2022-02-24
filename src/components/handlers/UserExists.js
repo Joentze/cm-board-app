@@ -10,7 +10,7 @@ export const userExistHandler = async (content) => {
       if (!doc.exists) {
         console.log("has not signed in");
         //redirects you to sign up data form
-        console.log(content.uid);
+        //console.log(content.uid);
         db.collection("users").doc(content.uid).set({
           email: content.email,
           setProfile: false,

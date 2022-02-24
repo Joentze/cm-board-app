@@ -14,6 +14,7 @@ const HomePage = () => {
       .doc(currentUser.uid)
       .get()
       .then((doc) => {
+        //console.log(doc);
         setProfile(doc.data()["setProfile"]);
       });
   };

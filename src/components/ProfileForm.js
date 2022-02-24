@@ -8,7 +8,6 @@ import { useState, useContext } from "react";
 import { UserFirebaseAuth } from "./handlers/UserContext";
 import { db } from "../base";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
@@ -30,6 +29,8 @@ const ProfileForm = () => {
       service: selectVal,
       birthdate: date,
       setProfile: true,
+      admin: false,
+      access: false,
     };
     db.collection("users")
       .doc(currentUser.uid)
@@ -37,10 +38,6 @@ const ProfileForm = () => {
       .then(() => {
         window.location.reload();
       });
-  };
-
-  const handleSelect = (data) => {
-    console.log("select change", data);
   };
 
   return (
@@ -69,12 +66,12 @@ const ProfileForm = () => {
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        <br></br>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={selectVal}
           label={"Attending Service"}
+          style={{ marginLeft: "10px" }}
           onChange={(event) => {
             setSelectVal(event.target.value);
           }}
@@ -87,6 +84,7 @@ const ProfileForm = () => {
             );
           })}
         </Select>
+        <br></br>
         <TextField
           id="standard-basic"
           {...register("address")}
