@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router";
-import { UserFirebaseAuth } from "../components/handlers/UserContext";
-import { useEffect, useContext, useState } from "react";
+import {
+  UserFirebaseAuth,
+  useAccess,
+  useAuth,
+} from "../components/handlers/UserContext";
+import { useEffect, useState } from "react";
 import SignOutButton from "../components/SignoutButton";
 import ProfileForm from "../components/ProfileForm";
 import { db } from "../base";
 const HomePage = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(true);
-  const currentUser = useContext(UserFirebaseAuth);
+  const access = useAccess();
+  const currentUser = useAuth();
   const checkProfileState = async () => {
     await db
       .collection("users")
@@ -19,7 +24,7 @@ const HomePage = () => {
   };
   useEffect(() => {
     if (!currentUser) {
-      navigate("./login");
+      navigate("/login");
     }
     checkProfileState();
   }, []);
@@ -27,7 +32,11 @@ const HomePage = () => {
     <>
       <h1>Home</h1>
       {profile ? (
-        <h1>Regular Home</h1>
+        access ? (
+          <h1>Regular Home</h1>
+        ) : (
+          <h1>Restricted Home</h1>
+        )
       ) : (
         <div>
           <ProfileForm />
