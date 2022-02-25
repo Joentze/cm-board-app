@@ -38,30 +38,35 @@
 }
 
 .Attendance-table-name {
-  padding-right: 50px;
-  padding-left: 5px;
+  width: 20vw;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: left;
 }
 .Attendance-table-chip {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 .App-link {
   color: #61dafb;
 }
-.tableFixHead {
-  overflow-y: scroll;
-  height: 200px;
-  width: fit-content;
-}
-.tableFixHead thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+.table-attendance {
+  height: max-content;
+  width: 100vw;
 }
 
+.attendance-row-flex {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.attendance-scroll-box {
+  height: 120px;
+  overflow-y: scroll;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

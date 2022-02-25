@@ -47,40 +47,37 @@ export default function AttendanceTable() {
   }, []);
   return (
     <>
-      <div class="tableFixHead">
-        <table className={"Attendance-table"}>
-          <thead>
-            <tr>
-              <th className={"Attendance-table-name"}>Name</th>
-              <th className={"Attendance-table-chip"}>Attendance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(tableVal)
-              .sort()
-              .map((item, key) => {
-                return (
-                  <tr>
-                    <th className={"Attendance-table-name"}>
-                      <u>{item}</u>
-                    </th>
-                    <th className={"Attendance-table-chip"}>
-                      <Chip
-                        icon={icons[tableVal[item]]}
-                        style={chipColorMap["paper"][status[tableVal[item]]]}
-                        size="large"
-                        label={status[tableVal[item]]}
-                        variant="outlined"
-                        onClick={() => {
-                          handleChipClick(item);
-                        }}
-                      />
-                    </th>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+      <div class="table-attendance">
+        <div class="attendance-row-flex fixed-head">
+          <div className={"Attendance-table-name"}>Name</div>
+          <div className={"Attendance-table-chip"}>Attendance</div>
+        </div>
+        <Divider />
+        <div className={"attendance-scroll-box"}>
+          {Object.keys(tableVal)
+            .sort()
+            .map((item, key) => {
+              return (
+                <div class="attendance-row-flex">
+                  <div className={"Attendance-table-name"}>
+                    <u>{item}</u>
+                  </div>
+                  <div className={"Attendance-table-chip"}>
+                    <Chip
+                      icon={icons[tableVal[item]]}
+                      style={chipColorMap["paper"][status[tableVal[item]]]}
+                      size="large"
+                      label={status[tableVal[item]]}
+                      variant="outlined"
+                      onClick={() => {
+                        handleChipClick(item);
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+        </div>
       </div>
     </>
   );
