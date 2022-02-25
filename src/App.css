@@ -55,7 +55,8 @@
 }
 .table-attendance {
   height: max-content;
-  width: 100vw;
+  max-width: 500px;
+  margin: 20px;
 }
 
 .attendance-row-flex {

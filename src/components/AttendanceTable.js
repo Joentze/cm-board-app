@@ -7,16 +7,18 @@ import { chipColorMap } from "../assets/ColorMap";
 import ChurchIcon from "@mui/icons-material/Church";
 import ComputerIcon from "@mui/icons-material/Computer";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { NoEncryption } from "@mui/icons-material";
+import AttendanceDialog from "./AttendanceDialog";
 
 let dummyValues = {
-  Peter: 1,
+  "Bryan Yip": 1,
   John: 2,
   James: 0,
   Jesus: 1,
 };
 
 export default function AttendanceTable() {
+  const [dialogState, setDialogState] = useState(false);
+  const [selectedName, setSelectedName] = useState(null);
   const status = ["Absent", "Church", "Zoom"];
   const icons = [
     <CancelIcon fontSize="small" />,
@@ -24,6 +26,15 @@ export default function AttendanceTable() {
     <ComputerIcon fontSize="small" style={{ color: "white" }} />,
   ];
   const [tableVal, setTableVal] = useState(dummyValues);
+  const handleDialogClose = () => {
+    setSelectedName(null);
+    setDialogState(false);
+  };
+
+  const handleDialogOpen = (name) => {
+    setSelectedName(name);
+    setDialogState(true);
+  };
   const handleChipClick = async (item) => {
     if (tableVal[item] < 2) {
       tableVal[item] += 1;
@@ -59,7 +70,12 @@ export default function AttendanceTable() {
             .map((item, key) => {
               return (
                 <div class="attendance-row-flex">
-                  <div className={"Attendance-table-name"}>
+                  <div
+                    className={"Attendance-table-name"}
+                    onClick={() => {
+                      handleDialogOpen(item);
+                    }}
+                  >
                     <u>{item}</u>
                   </div>
                   <div className={"Attendance-table-chip"}>
@@ -79,6 +95,11 @@ export default function AttendanceTable() {
             })}
         </div>
       </div>
+      <AttendanceDialog
+        onClose={handleDialogClose}
+        open={dialogState}
+        data={selectedName}
+      />
     </>
   );
 }
