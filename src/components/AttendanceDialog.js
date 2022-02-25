@@ -16,15 +16,20 @@ const AttendanceDialog = (props) => {
     setLoading(true);
   };
   useEffect(() => {
+    console.log("opening...");
     if (open && !content) {
-      console.log("getting name");
       db.collection("cm-kids-data")
         .doc(data)
         .get()
         .then((doc) => {
-          console.log(doc.data());
-          setContent(doc.data());
-          setLoading(false);
+          if (doc.exists) {
+            console.log(doc.data());
+            setContent(doc.data());
+            setLoading(false);
+          } else {
+            setContent({ "full-name": "No Available Data" });
+            setLoading(false);
+          }
         })
         .catch((error) => {
           alert(error);
