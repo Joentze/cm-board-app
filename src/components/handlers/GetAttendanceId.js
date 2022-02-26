@@ -15,7 +15,7 @@ const padTo2Digits = (num) => {
   return num.toString().padStart(2, "0");
 };
 export const dateTodayEightString = (today) => {
-  let date = today.getDate().toString();
+  let date = padTo2Digits(today.getDate());
   let month = padTo2Digits(today.getMonth() + 1);
   let year = today.getFullYear().toString();
   return date + month + year;

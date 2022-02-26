@@ -61,7 +61,7 @@ const ProfileForm = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             label="Date mobile"
-            inputFormat="MM/dd/yyyy"
+            inputFormat="dd/MM/yyyy"
             value={date}
             onChange={(newValue) => {
               //console.lognewValue);

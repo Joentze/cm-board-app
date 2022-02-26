@@ -44,7 +44,6 @@ const AttendanceSessionSelect = (props) => {
   const theme = useTheme();
   const [sessionCode, setSessionCode] = useState("");
   const handleSel = (event) => {
-    console.log(event.target.value);
     setSel(event.target.value);
   };
 
