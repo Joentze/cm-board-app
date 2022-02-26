@@ -56,6 +56,7 @@ const AttendanceSessionSelect = (props) => {
         <InputLabel htmlFor="grouped-select">Session & Class</InputLabel>
         <Select
           defaultValue={getSelectClassFromLocalStorage("FPP6")}
+          npm
           id="grouped-select"
           label="Session & Class"
           onChange={handleSel}

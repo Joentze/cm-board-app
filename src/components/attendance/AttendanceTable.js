@@ -9,22 +9,30 @@ import ComputerIcon from "@mui/icons-material/Computer";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AttendanceDialog from "./AttendanceDialog";
 import AttendanceSelectionBox from "./AttendanceSelectionBox";
+import { useAuth } from "../handlers/UserContext";
+import {
+  createAttendanceMap,
+  createAttendanceRecord,
+} from "../handlers/GetAttendanceId";
+
 let dummyValues = {
   "Bryan Yip": 1,
   John: 2,
   James: 0,
   Jesus: 1,
 };
+const status = ["Absent", "Church", "Zoom"];
+
+const icons = [
+  <CancelIcon fontSize="small" />,
+  <ChurchIcon fontSize="small" style={{ color: "white" }} />,
+  <ComputerIcon fontSize="small" style={{ color: "white" }} />,
+];
 
 export default function AttendanceTable() {
   const [dialogState, setDialogState] = useState(false);
   const [selectedName, setSelectedName] = useState(null);
-  const status = ["Absent", "Church", "Zoom"];
-  const icons = [
-    <CancelIcon fontSize="small" />,
-    <ChurchIcon fontSize="small" style={{ color: "white" }} />,
-    <ComputerIcon fontSize="small" style={{ color: "white" }} />,
-  ];
+  const currentUser = useAuth();
   const [tableVal, setTableVal] = useState({});
   const handleDialogClose = () => {
     setSelectedName(null);
@@ -35,6 +43,28 @@ export default function AttendanceTable() {
     setSelectedName(name);
     setDialogState(true);
   };
+  //gets ID from select and checks if attendnace has been created
+  //if it has, set table values to the selected attendance
+  //else, create new attendance and a record of attendance
+  //each ID is unique
+  const useOnAttendanceIdChange = (id) => {
+    const mmyyyy = id.substring(5, 11);
+    db.collection("all-attendance")
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          db.collection("cm-attendance")
+            .doc(mmyyyy)
+            .get()
+            .then((doc) => {
+              setTableVal(doc.data()[id]);
+            });
+        } else {
+          createAttendanceRecord(id, currentUser);
+        }
+      });
+  };
+
   const handleChipClick = async (item) => {
     if (tableVal[item] < 2) {
       tableVal[item] += 1;

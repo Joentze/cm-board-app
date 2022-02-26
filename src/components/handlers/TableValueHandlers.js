@@ -4,7 +4,7 @@ export const saveSelectClassToLocalStorage = (value) => {
 
 export const getSelectClassFromLocalStorage = (defaultVal) => {
   let getVal = localStorage.getItem("sessionCode");
-  if (getVal !== undefined) {
+  if (getVal !== undefined && getVal !== null) {
     return getVal;
   } else {
     saveSelectClassToLocalStorage(defaultVal);
