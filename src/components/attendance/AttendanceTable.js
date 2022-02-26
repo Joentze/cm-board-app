@@ -25,7 +25,7 @@ export default function AttendanceTable() {
     <ChurchIcon fontSize="small" style={{ color: "white" }} />,
     <ComputerIcon fontSize="small" style={{ color: "white" }} />,
   ];
-  const [tableVal, setTableVal] = useState(dummyValues);
+  const [tableVal, setTableVal] = useState({});
   const handleDialogClose = () => {
     setSelectedName(null);
     setDialogState(false);
