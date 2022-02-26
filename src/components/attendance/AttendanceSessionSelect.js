@@ -7,6 +7,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import ListSubheader from "@mui/material/ListSubheader";
+import {
+  getSelectClassFromLocalStorage,
+  saveSelectClassToLocalStorage,
+} from "../handlers/TableValueHandlers";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -42,7 +46,6 @@ const sessions = [
 const AttendanceSessionSelect = (props) => {
   const { setSel } = props;
   const theme = useTheme();
-  const [sessionCode, setSessionCode] = useState("");
   const handleSel = (event) => {
     setSel(event.target.value);
   };
@@ -52,7 +55,7 @@ const AttendanceSessionSelect = (props) => {
       <FormControl sx={{ m: 1, minWidth: "30vw" }}>
         <InputLabel htmlFor="grouped-select">Session & Class</InputLabel>
         <Select
-          defaultValue=""
+          defaultValue={getSelectClassFromLocalStorage("FPP6")}
           id="grouped-select"
           label="Session & Class"
           onChange={handleSel}
