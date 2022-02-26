@@ -3,7 +3,7 @@ import ListItem from "@mui/material/ListItem";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import { useEffect, useState } from "react";
-import { db } from "../base";
+import { db } from "../../base";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 const AttendanceDialog = (props) => {

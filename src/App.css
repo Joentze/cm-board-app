@@ -39,9 +39,12 @@
 
 .Attendance-table-name {
   width: 20vw;
+  max-width: 300px;
   padding-top: 10px;
   padding-bottom: 10px;
+  padding-left: 10px;
   text-align: left;
+  cursor: pointer;
 }
 .Attendance-table-chip {
   position: relative;

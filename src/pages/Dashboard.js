@@ -2,7 +2,7 @@ import { useAuth, useAccess } from "../components/handlers/UserContext";
 import { db } from "../base";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AttendanceTable from "../components/AttendanceTable";
+import AttendanceTable from "../components/attendance/AttendanceTable";
 import {
   getBirthYear,
   isSunday,
