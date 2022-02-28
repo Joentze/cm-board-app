@@ -26,7 +26,7 @@ export const FirebaseAuthData = ({ children }) => {
             setAccess(doc.data()["access"]);
           });
       } catch (TypeError) {
-        console.log("getting access...");
+        //console.log("getting access...");
       }
       setCurrentUser(user);
       setLoading(false);

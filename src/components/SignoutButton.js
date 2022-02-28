@@ -9,11 +9,11 @@ const SignOutButton = () => {
         auth
           .signOut()
           .then(() => {
-            //console.log'sign out')
+            ////console.log'sign out')
             navigate("/login");
           })
           .catch((error) => {
-            //console.logerror)
+            ////console.logerror)
           });
       }}
     >

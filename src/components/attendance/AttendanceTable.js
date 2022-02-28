@@ -55,8 +55,8 @@ export default function AttendanceTable() {
 
   const createAttendanceRecord = (id, currentUser) => {
     const mmyyyy = id.substring(6, 12);
-    console.log(mmyyyy);
-    console.log("path", id);
+    //console.log(mmyyyy);
+    //console.log("path", id);
     db.collection("all-attendance")
       .doc(id)
       .set({
@@ -64,11 +64,11 @@ export default function AttendanceTable() {
         creator: currentUser.email,
       })
       .then(() => {
-        console.log("trying this thing");
+        //console.log("trying this thing");
         createAttendanceMap(id);
       })
       .catch((error) => {
-        console.log("yeet 1");
+        //console.log("yeet 1");
         alert(error);
       });
   };
@@ -105,8 +105,9 @@ export default function AttendanceTable() {
   //each ID is unique
   const OnAttendanceIdChange = (id) => {
     const mmyyyy = id.substring(6, 12);
-    console.log(mmyyyy);
-    console.log("checking: ", id);
+    setAttendanceId(id);
+    //console.log(mmyyyy);
+    //console.log("checking: ", id);
     db.collection("all-attendance")
       .doc(id)
       .get()
@@ -114,6 +115,7 @@ export default function AttendanceTable() {
         if (!doc.exists) {
           createAttendanceRecord(id, currentUser);
         } else {
+          console.log("getting existing doc", mmyyyy);
           db.collection("cm-attendance")
             .doc(mmyyyy)
             .get()
@@ -140,7 +142,7 @@ export default function AttendanceTable() {
   //On start up get attendance via ID
   useEffect(() => {
     if (!isLoaded) {
-      console.log("start up");
+      //console.log("start up");
       OnAttendanceIdChange(attendanceId);
       setIsLoaded(true);
     }
@@ -150,7 +152,7 @@ export default function AttendanceTable() {
     db.collection("cm-attendance")
       .doc(attendanceId.substring(6, 12))
       .onSnapshot((doc) => {
-        console.log("snapshoting", attendanceId);
+        //console.log("snapshoting", attendanceId);
         setTableVal(doc.data()[attendanceId]);
       });
     return () => {

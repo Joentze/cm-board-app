@@ -31,7 +31,7 @@ const AttendanceSelectionBox = (props) => {
   );
 
   const onSelect = (event) => {
-    console.log(event);
+    //console.log(event);
     setSelectVal(event);
     saveSelectClassToLocalStorage(event);
     assignAttendance(event, date);
@@ -57,7 +57,7 @@ const AttendanceSelectionBox = (props) => {
               inputFormat="dd/MM/yyyy"
               value={date}
               onChange={(newValue) => {
-                //console.lognewValue);
+                ////console.lognewValue);
                 onSetDate(newValue);
               }}
               renderInput={(params) => <TextField {...params} />}

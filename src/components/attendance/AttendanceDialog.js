@@ -22,7 +22,7 @@ const AttendanceDialog = (props) => {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            console.log(doc.data());
+            //console.log(doc.data());
             setContent(doc.data());
             setLoading(false);
           } else {
