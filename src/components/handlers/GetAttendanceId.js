@@ -3,7 +3,8 @@ import { useAuth } from "./UserContext";
 import { ageMap } from "../../assets/CmAgeMap";
 export const getBirthYear = (age) => {
   let today = new Date();
-  return today.getFullYear() - age;
+  let yearInt = today.getFullYear() - age;
+  return yearInt.toString();
 };
 
 export const isSunday = (today) => {
@@ -25,7 +26,9 @@ export const dateTodayEightString = (today) => {
 };
 
 export const createAttendanceRecord = (id, currentUser) => {
-  const mmyyyy = id.substring(5, 11);
+  const mmyyyy = id.substring(6, 12);
+  console.log(mmyyyy);
+  console.log("path", id);
   db.collection("all-attendance")
     .doc(id)
     .set({
@@ -33,17 +36,18 @@ export const createAttendanceRecord = (id, currentUser) => {
       creator: currentUser.email,
     })
     .then(() => {
-      db.collection("cm-attendance")
-        .doc(mmyyyy)
-        .set({ id: createAttendanceMap(id) }, { merge: true });
+      console.log("trying this thing");
+      createAttendanceMap(id);
     })
     .catch((error) => {
+      console.log("yeet 1");
       alert(error);
     });
 };
 
 export const createAttendanceMap = (id) => {
-  const classLevel = id.substring(2, 3);
+  const classLevel = id.substring(2, 4);
+  const mmyyyy = id.substring(6, 12);
   const birthYear = getBirthYear(ageMap[classLevel]);
   let dict = {};
   db.collection("cm-kids-year")
@@ -54,10 +58,12 @@ export const createAttendanceMap = (id) => {
         for (let name of doc.data()[id[0]]) {
           dict[name] = 0;
         }
+        db.collection("cm-attendance")
+          .doc(mmyyyy)
+          .set({ [id]: dict }, { merge: true });
       }
     })
     .catch((error) => {
       alert(error);
     });
-  return dict;
 };

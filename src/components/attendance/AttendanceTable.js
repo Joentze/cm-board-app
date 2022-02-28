@@ -14,6 +14,8 @@ import {
   createAttendanceMap,
   createAttendanceRecord,
 } from "../handlers/GetAttendanceId";
+import { dateTodayEightString } from "../handlers/GetAttendanceId";
+import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
 
 let dummyValues = {
   "Bryan Yip": 1,
@@ -34,6 +36,10 @@ export default function AttendanceTable() {
   const [selectedName, setSelectedName] = useState(null);
   const currentUser = useAuth();
   const [tableVal, setTableVal] = useState({});
+  const [attendanceId, setAttendanceId] = useState(
+    getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
+  );
+
   const handleDialogClose = () => {
     setSelectedName(null);
     setDialogState(false);
@@ -43,25 +49,36 @@ export default function AttendanceTable() {
     setSelectedName(name);
     setDialogState(true);
   };
+
+  const returnAttendanceId = (selectVal, date) => {
+    setAttendanceId(selectVal + dateTodayEightString(date));
+    OnAttendanceIdChange(selectVal + dateTodayEightString(date));
+    console.log(selectVal + dateTodayEightString(date));
+  };
   //gets ID from select and checks if attendnace has been created
   //if it has, set table values to the selected attendance
   //else, create new attendance and a record of attendance
   //each ID is unique
-  const useOnAttendanceIdChange = (id) => {
-    const mmyyyy = id.substring(5, 11);
+  const OnAttendanceIdChange = (id) => {
+    const mmyyyy = id.substring(6, 12);
+    console.log(mmyyyy);
+    console.log("checking: ", id);
     db.collection("all-attendance")
+      .doc(id)
       .get()
       .then((doc) => {
-        if (doc.exists) {
-          db.collection("cm-attendance")
-            .doc(mmyyyy)
-            .get()
-            .then((doc) => {
-              setTableVal(doc.data()[id]);
-            });
-        } else {
+        if (!doc.exists) {
+          console.log("it doesnt exists stupid");
           createAttendanceRecord(id, currentUser);
+          createAttendanceMap(id);
         }
+        db.collection("cm-attendance")
+          .doc(mmyyyy)
+          .get()
+          .then((doc) => {
+            console.log("this data", doc.data());
+            setTableVal(doc.data()[id]);
+          });
       });
   };
 
@@ -71,24 +88,26 @@ export default function AttendanceTable() {
     } else if (tableVal[item] >= 2) {
       tableVal[item] = 0;
     }
+    //setTableVal(tableVal);
     await db
       .collection("cm-attendance")
-      .doc("022021")
-      .set({ FPP401022021: tableVal }, { merge: true });
+      .doc(attendanceId.substring(6, 12))
+      .set({ [attendanceId]: tableVal }, { merge: true })
+      .then(() => {
+        console.log(tableVal);
+      });
   };
 
   useEffect(() => {
     db.collection("cm-attendance")
-      .doc("022021")
+      .doc(attendanceId.substring(6, 12))
       .onSnapshot((doc) => {
-        let thisData = doc.data()["FPP401022021"];
-        console.log(thisData);
-        setTableVal(thisData);
+        setTableVal(doc.data()[attendanceId]);
       });
   }, []);
   return (
     <>
-      <AttendanceSelectionBox />
+      <AttendanceSelectionBox assignAttendance={returnAttendanceId} />
       <div class="table-attendance">
         <div class="attendance-row-flex fixed-head">
           <div className={"Attendance-table-name"}>Name</div>

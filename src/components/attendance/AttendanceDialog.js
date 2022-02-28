@@ -16,7 +16,6 @@ const AttendanceDialog = (props) => {
     setLoading(true);
   };
   useEffect(() => {
-    console.log("opening...");
     if (open && !content) {
       db.collection("cm-kids-data")
         .doc(data)
@@ -45,12 +44,12 @@ const AttendanceDialog = (props) => {
           <CircularProgress />
         </Box>
       ) : (
-        <List sx={{ pt: 0 }}>
-          <ListItem>
-            <p>{content["full-name"]}</p>
-          </ListItem>
-        </List>
-      )}
+          <List sx={{ pt: 0 }}>
+            <ListItem>
+              <p>{content["full-name"]}</p>
+            </ListItem>
+          </List>
+        )}
     </Dialog>
   );
 };

@@ -23,21 +23,25 @@ const sessionMap = {
   ST: "2nd Praise-Tots",
 };
 const AttendanceSelectionBox = (props) => {
+  const { assignAttendance } = props;
   const [date, setDate] = useState(new Date());
   const [selectVal, setSelectVal] = useState(
     getSelectClassFromLocalStorage("FPP6")
   );
+
   const onSelect = (event) => {
     console.log(event);
     setSelectVal(event);
     saveSelectClassToLocalStorage(event);
-    console.log(localStorage.getItem("sessionCode"));
+    assignAttendance(event, date);
   };
   const onSetDate = (value) => {
     let date = new Date(value);
     console.log(dateTodayEightString(date));
     setDate(value);
+    assignAttendance(selectVal, date);
   };
+
   return (
     <>
       <h1>{selectVal.substring(2, 4)}</h1>
