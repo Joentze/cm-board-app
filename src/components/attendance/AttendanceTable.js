@@ -39,6 +39,7 @@ export default function AttendanceTable() {
   const [attendanceId, setAttendanceId] = useState(
     getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
   );
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleDialogClose = () => {
     setSelectedName(null);
@@ -53,6 +54,7 @@ export default function AttendanceTable() {
   const returnAttendanceId = (selectVal, date) => {
     setAttendanceId(selectVal + dateTodayEightString(date));
     OnAttendanceIdChange(selectVal + dateTodayEightString(date));
+    console.log("setting id");
     console.log(selectVal + dateTodayEightString(date));
   };
   //gets ID from select and checks if attendnace has been created
@@ -68,35 +70,43 @@ export default function AttendanceTable() {
       .get()
       .then((doc) => {
         if (!doc.exists) {
-          console.log("it doesnt exists stupid");
           createAttendanceRecord(id, currentUser);
           createAttendanceMap(id);
+          setIsLoaded(false);
+        } else {
+          db.collection("cm-attendance")
+            .doc(mmyyyy)
+            .get()
+            .then((doc) => {
+              console.log("this data", doc.data());
+              setTableVal(doc.data()[id]);
+            });
         }
-        db.collection("cm-attendance")
-          .doc(mmyyyy)
-          .get()
-          .then((doc) => {
-            console.log("this data", doc.data());
-            setTableVal(doc.data()[id]);
-          });
       });
   };
 
   const handleChipClick = async (item) => {
+    console.log(item);
+    console.log(attendanceId.substring(6, 12));
+    console.log(attendanceId);
+    console.log(tableVal);
     if (tableVal[item] < 2) {
       tableVal[item] += 1;
     } else if (tableVal[item] >= 2) {
       tableVal[item] = 0;
     }
-    //setTableVal(tableVal);
-    await db
-      .collection("cm-attendance")
+    db.collection("cm-attendance")
       .doc(attendanceId.substring(6, 12))
       .set({ [attendanceId]: tableVal }, { merge: true })
       .then(() => {
-        console.log(tableVal);
+        setTableVal(tableVal);
       });
   };
+  //On start up get attendance via ID
+  if (!isLoaded) {
+    OnAttendanceIdChange(attendanceId);
+    setIsLoaded(true);
+  }
 
   useEffect(() => {
     db.collection("cm-attendance")

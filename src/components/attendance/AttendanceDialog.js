@@ -44,12 +44,12 @@ const AttendanceDialog = (props) => {
           <CircularProgress />
         </Box>
       ) : (
-          <List sx={{ pt: 0 }}>
-            <ListItem>
-              <p>{content["full-name"]}</p>
-            </ListItem>
-          </List>
-        )}
+        <List sx={{ pt: 0 }}>
+          <ListItem>
+            <p>{content["full-name"]}</p>
+          </ListItem>
+        </List>
+      )}
     </Dialog>
   );
 };
