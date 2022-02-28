@@ -34,12 +34,12 @@ export default function AttendanceTable() {
   const [selectedName, setSelectedName] = useState(null);
   const currentUser = useAuth();
   const [tableVal, setTableVal] = useState({});
-  const [attendanceId, setAttendanceId] = useState(
-    getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
-  );
   const [isLoaded, setIsLoaded] = useState(false);
   const [attdLoad, setAttdLoad] = useState(false);
   const [alertState, setAlertState] = useState(false);
+  const [attendanceId, setAttendanceId] = useState(
+    getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
+  );
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -157,7 +157,6 @@ export default function AttendanceTable() {
     if (!isLoaded) {
       OnAttendanceIdChange(attendanceId);
       setIsLoaded(true);
-      setAttdLoad(true);
     }
   }, [isLoaded, attendanceId]);
 

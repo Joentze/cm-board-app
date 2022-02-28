@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import SignOutButton from "../components/SignoutButton";
 import ProfileForm from "../components/ProfileForm";
 import { db } from "../base";
+import FeedbackButton from "../components/administrative/FeedbackButton";
 const HomePage = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(true);
@@ -44,6 +45,7 @@ const HomePage = () => {
         </div>
       )}
       <SignOutButton />
+      <FeedbackButton />
     </>
   );
 };
