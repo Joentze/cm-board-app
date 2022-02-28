@@ -1,7 +1,6 @@
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
-import Stack from "@mui/material/Stack";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { db } from "../../base";
 import { chipColorMap } from "../../assets/ColorMap";
 import ChurchIcon from "@mui/icons-material/Church";
@@ -14,13 +13,10 @@ import { ageMap } from "../../assets/CmAgeMap";
 import { getBirthYear } from "../handlers/GetAttendanceId";
 import { dateTodayEightString } from "../handlers/GetAttendanceId";
 import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
+import LinearProgress from "@mui/material/LinearProgress";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
-let dummyValues = {
-  "Bryan Yip": 1,
-  John: 2,
-  James: 0,
-  Jesus: 1,
-};
 const status = ["Absent", "Church", "Zoom"];
 
 const icons = [
@@ -28,6 +24,10 @@ const icons = [
   <ChurchIcon fontSize="small" style={{ color: "white" }} />,
   <ComputerIcon fontSize="small" style={{ color: "white" }} />,
 ];
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function AttendanceTable() {
   const [dialogState, setDialogState] = useState(false);
@@ -38,6 +38,15 @@ export default function AttendanceTable() {
     getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
   );
   const [isLoaded, setIsLoaded] = useState(false);
+  const [attdLoad, setAttdLoad] = useState(false);
+  const [alertState, setAlertState] = useState(false);
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertState(false);
+  };
 
   const handleDialogClose = () => {
     setSelectedName(null);
@@ -64,8 +73,8 @@ export default function AttendanceTable() {
         creator: currentUser.email,
       })
       .then(() => {
-        //console.log("trying this thing");
         createAttendanceMap(id);
+        setAlertState(true);
       })
       .catch((error) => {
         //console.log("yeet 1");
@@ -91,6 +100,8 @@ export default function AttendanceTable() {
             .set({ [id]: dict }, { merge: true })
             .then(() => {
               setTableVal(dict);
+              setAttendanceId(id);
+              setAttdLoad(true);
             });
         }
       })
@@ -105,7 +116,7 @@ export default function AttendanceTable() {
   //each ID is unique
   const OnAttendanceIdChange = (id) => {
     const mmyyyy = id.substring(6, 12);
-    setAttendanceId(id);
+    setAttdLoad(false);
     //console.log(mmyyyy);
     //console.log("checking: ", id);
     db.collection("all-attendance")
@@ -122,6 +133,8 @@ export default function AttendanceTable() {
             .then((doc) => {
               setTableVal(doc.data()[id]);
             });
+          setAttendanceId(id);
+          setAttdLoad(true);
         }
       });
   };
@@ -142,9 +155,9 @@ export default function AttendanceTable() {
   //On start up get attendance via ID
   useEffect(() => {
     if (!isLoaded) {
-      //console.log("start up");
       OnAttendanceIdChange(attendanceId);
       setIsLoaded(true);
+      setAttdLoad(true);
     }
   }, [isLoaded, attendanceId]);
 
@@ -168,42 +181,61 @@ export default function AttendanceTable() {
           <div className={"Attendance-table-chip"}>Attendance</div>
         </div>
         <Divider />
-        <div className={"attendance-scroll-box"}>
-          {Object.keys(tableVal)
-            .sort()
-            .map((item, key) => {
-              return (
-                <div class="attendance-row-flex">
-                  <div
-                    className={"Attendance-table-name"}
-                    onClick={() => {
-                      handleDialogOpen(item);
-                    }}
-                  >
-                    <u>{item}</u>
-                  </div>
-                  <div className={"Attendance-table-chip"}>
-                    <Chip
-                      icon={icons[tableVal[item]]}
-                      style={chipColorMap["paper"][status[tableVal[item]]]}
-                      size="large"
-                      label={status[tableVal[item]]}
-                      variant="outlined"
+        {isLoaded ? (
+          <div className={"attendance-scroll-box"}>
+            {Object.keys(tableVal)
+              .sort()
+              .map((item, key) => {
+                return (
+                  <div class="attendance-row-flex">
+                    <div
+                      className={"Attendance-table-name"}
                       onClick={() => {
-                        handleChipClick(item);
+                        handleDialogOpen(item);
                       }}
-                    />
+                    >
+                      <u>{item}</u>
+                    </div>
+                    <div className={"Attendance-table-chip"}>
+                      <Chip
+                        icon={icons[tableVal[item]]}
+                        style={chipColorMap["paper"][status[tableVal[item]]]}
+                        size="large"
+                        label={status[tableVal[item]]}
+                        variant="outlined"
+                        onClick={() => {
+                          handleChipClick(item);
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-        </div>
+                );
+              })}
+          </div>
+        ) : (
+          <>
+            <LinearProgress />
+          </>
+        )}
       </div>
       <AttendanceDialog
         onClose={handleDialogClose}
         open={dialogState}
         data={selectedName}
       />
+      <Snackbar
+        open={alertState}
+        autoHideDuration={2000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Attendance Created Successfully
+        </Alert>
+      </Snackbar>
     </>
   );
 }
