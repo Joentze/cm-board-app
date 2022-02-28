@@ -10,10 +10,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import AttendanceDialog from "./AttendanceDialog";
 import AttendanceSelectionBox from "./AttendanceSelectionBox";
 import { useAuth } from "../handlers/UserContext";
-import {
-  createAttendanceMap,
-  createAttendanceRecord,
-} from "../handlers/GetAttendanceId";
+import { ageMap } from "../../assets/CmAgeMap";
+import { getBirthYear } from "../handlers/GetAttendanceId";
 import { dateTodayEightString } from "../handlers/GetAttendanceId";
 import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
 
@@ -52,11 +50,55 @@ export default function AttendanceTable() {
   };
 
   const returnAttendanceId = (selectVal, date) => {
-    setAttendanceId(selectVal + dateTodayEightString(date));
     OnAttendanceIdChange(selectVal + dateTodayEightString(date));
-    console.log("setting id");
-    console.log(selectVal + dateTodayEightString(date));
   };
+
+  const createAttendanceRecord = (id, currentUser) => {
+    const mmyyyy = id.substring(6, 12);
+    console.log(mmyyyy);
+    console.log("path", id);
+    db.collection("all-attendance")
+      .doc(id)
+      .set({
+        dateCreated: new Date(),
+        creator: currentUser.email,
+      })
+      .then(() => {
+        console.log("trying this thing");
+        createAttendanceMap(id);
+      })
+      .catch((error) => {
+        console.log("yeet 1");
+        alert(error);
+      });
+  };
+
+  const createAttendanceMap = (id) => {
+    const classLevel = id.substring(2, 4);
+    const mmyyyy = id.substring(6, 12);
+    const birthYear = getBirthYear(ageMap[classLevel]);
+    let dict = {};
+    db.collection("cm-kids-year")
+      .doc(birthYear)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          for (let name of doc.data()[id[0]]) {
+            dict[name] = 0;
+          }
+          db.collection("cm-attendance")
+            .doc(mmyyyy)
+            .set({ [id]: dict }, { merge: true })
+            .then(() => {
+              setTableVal(dict);
+            });
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
   //gets ID from select and checks if attendnace has been created
   //if it has, set table values to the selected attendance
   //else, create new attendance and a record of attendance
@@ -71,14 +113,11 @@ export default function AttendanceTable() {
       .then((doc) => {
         if (!doc.exists) {
           createAttendanceRecord(id, currentUser);
-          createAttendanceMap(id);
-          setIsLoaded(false);
         } else {
           db.collection("cm-attendance")
             .doc(mmyyyy)
             .get()
             .then((doc) => {
-              console.log("this data", doc.data());
               setTableVal(doc.data()[id]);
             });
         }
@@ -86,10 +125,6 @@ export default function AttendanceTable() {
   };
 
   const handleChipClick = async (item) => {
-    console.log(item);
-    console.log(attendanceId.substring(6, 12));
-    console.log(attendanceId);
-    console.log(tableVal);
     if (tableVal[item] < 2) {
       tableVal[item] += 1;
     } else if (tableVal[item] >= 2) {
@@ -103,18 +138,25 @@ export default function AttendanceTable() {
       });
   };
   //On start up get attendance via ID
-  if (!isLoaded) {
-    OnAttendanceIdChange(attendanceId);
-    setIsLoaded(true);
-  }
+  useEffect(() => {
+    if (!isLoaded) {
+      console.log("start up");
+      OnAttendanceIdChange(attendanceId);
+      setIsLoaded(true);
+    }
+  }, [isLoaded, attendanceId]);
 
   useEffect(() => {
     db.collection("cm-attendance")
       .doc(attendanceId.substring(6, 12))
       .onSnapshot((doc) => {
+        console.log("snapshoting", attendanceId);
         setTableVal(doc.data()[attendanceId]);
       });
-  }, []);
+    return () => {
+      setTableVal({}); // This worked for me
+    };
+  }, [attendanceId]);
   return (
     <>
       <AttendanceSelectionBox assignAttendance={returnAttendanceId} />

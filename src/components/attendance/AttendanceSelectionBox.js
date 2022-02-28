@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AttendanceSessionSelect from "./AttendanceSessionSelect";
 import DatePicker from "@mui/lab/MobileDatePicker";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
@@ -37,9 +38,10 @@ const AttendanceSelectionBox = (props) => {
   };
   const onSetDate = (value) => {
     let date = new Date(value);
-    console.log(dateTodayEightString(date));
     setDate(value);
-    assignAttendance(selectVal, date);
+    if (dateTodayEightString(date).length === 8) {
+      assignAttendance(selectVal, date);
+    }
   };
 
   return (
@@ -50,8 +52,8 @@ const AttendanceSelectionBox = (props) => {
         <AttendanceSessionSelect setSel={onSelect} />
         <div style={{ marginTop: "8px" }}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Date mobile"
+            <DesktopDatePicker
+              label="Date"
               inputFormat="dd/MM/yyyy"
               value={date}
               onChange={(newValue) => {
