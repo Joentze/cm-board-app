@@ -32,32 +32,34 @@ const AttendanceSelectionBox = (props) => {
     getSelectClassFromLocalStorage("FPP6")
   );
   const [alertState, setAlertState] = useState(false);
+
+  const verifyAttendanceCreation = (select, date) => {
+    if (isSunday(date)) {
+      assignAttendance(select, date);
+      setAlertState(false);
+    } else {
+      db.collection("all-attendance")
+        .doc(select + dateTodayEightString(date))
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            assignAttendance(select, date);
+          } else {
+            setAlertState(true);
+          }
+        });
+    }
+  };
+
   const onSelect = (event) => {
-    //console.log(event);
     setSelectVal(event);
     saveSelectClassToLocalStorage(event);
-    assignAttendance(event, date);
+    verifyAttendanceCreation(event, date);
   };
   const onSetDate = (value) => {
     let thisDate = new Date(value);
     setDate(value);
-    if (dateTodayEightString(thisDate).length === 8) {
-      if (isSunday(thisDate)) {
-        assignAttendance(selectVal, thisDate);
-        setAlertState(false);
-      } else {
-        db.collection("all-attendance")
-          .doc(selectVal + dateTodayEightString(thisDate))
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              assignAttendance(selectVal, thisDate);
-            } else {
-              setAlertState(true);
-            }
-          });
-      }
-    }
+    verifyAttendanceCreation(selectVal, thisDate);
   };
   const createAnywayAlert = () => {
     assignAttendance(selectVal, date);
