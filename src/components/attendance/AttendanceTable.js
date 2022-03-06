@@ -11,7 +11,7 @@ import AttendanceSelectionBox from "./AttendanceSelectionBox";
 import { useAuth } from "../handlers/UserContext";
 import { ageMap } from "../../assets/CmAgeMap";
 import { getBirthYear } from "../handlers/GetAttendanceId";
-import { dateTodayEightString } from "../handlers/GetAttendanceId";
+import { dateTodayEightString, lastSunday } from "../handlers/GetAttendanceId";
 import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
 import LinearProgress from "@mui/material/LinearProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -38,7 +38,8 @@ export default function AttendanceTable() {
   const [attdLoad, setAttdLoad] = useState(false);
   const [alertState, setAlertState] = useState(false);
   const [attendanceId, setAttendanceId] = useState(
-    getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
+    getSelectClassFromLocalStorage("FPP6") +
+      dateTodayEightString(lastSunday(new Date()))
   );
 
   const handleAlertClose = (event, reason) => {

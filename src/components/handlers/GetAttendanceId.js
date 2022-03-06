@@ -8,7 +8,7 @@ export const getBirthYear = (age) => {
 };
 
 export const isSunday = (today) => {
-  if (today.getDay() === 6) {
+  if (today.getDay() === 0) {
     return true;
   } else {
     return false;
@@ -23,4 +23,10 @@ export const dateTodayEightString = (today) => {
   let month = padTo2Digits(today.getMonth() + 1);
   let year = today.getFullYear().toString();
   return date + month + year;
+};
+
+export const lastSunday = (today) => {
+  let noOfDaysAgo = today.getDay();
+  let last = new Date(today.getTime() - noOfDaysAgo * 24 * 60 * 60 * 1000);
+  return last;
 };
