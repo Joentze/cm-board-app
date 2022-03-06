@@ -35,7 +35,6 @@ export default function FeedbackButton() {
         .add({ date: new Date(), text: data.feedback })
         .then(() => {
           setSent(true);
-          setOpen(false);
         })
         .catch(() => {
           setIsError(true);
@@ -46,8 +45,21 @@ export default function FeedbackButton() {
   };
 
   return (
-    <div>
-      <Fab variant="outlined" onClick={handleClickOpen}>
+    <>
+      <Fab
+        variant="outlined"
+        onClick={handleClickOpen}
+        style={{
+          margin: 0,
+          top: "auto",
+          right: 40,
+          bottom: 40,
+          left: "auto",
+          position: "fixed",
+          background: "#5a5aff",
+          color: "whitesmoke",
+        }}
+      >
         <RateReviewIcon />
       </Fab>
       <Dialog open={open} onClose={handleClose}>
@@ -86,9 +98,13 @@ export default function FeedbackButton() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit(submitFeedback)}>Submit</Button>
+          {sent ? (
+            <></>
+          ) : (
+            <Button onClick={handleSubmit(submitFeedback)}>Submit</Button>
+          )}
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

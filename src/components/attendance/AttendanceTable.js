@@ -16,6 +16,7 @@ import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
 import LinearProgress from "@mui/material/LinearProgress";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import AddButton from "./AddButton";
 
 const status = ["Absent", "Church", "Zoom"];
 
@@ -174,6 +175,7 @@ export default function AttendanceTable() {
   return (
     <>
       <AttendanceSelectionBox assignAttendance={returnAttendanceId} />
+      <AddButton />
       <div class="table-attendance">
         <div class="attendance-row-flex fixed-head">
           <div className={"Attendance-table-name"}>Name</div>

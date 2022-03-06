@@ -24,3 +24,11 @@ export const dateTodayEightString = (today) => {
   let year = today.getFullYear().toString();
   return date + month + year;
 };
+
+export const reformatDateFromInput = (dateString) => {
+  let yyyymmdd = dateString.split("-");
+  return {
+    slash: `${yyyymmdd[2]}/${yyyymmdd[1]}/${yyyymmdd[0]}`,
+    noslash: `${yyyymmdd[2]}${yyyymmdd[1]}${yyyymmdd[0]}`,
+  };
+};
