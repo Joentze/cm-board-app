@@ -11,7 +11,7 @@ import AttendanceSelectionBox from "./AttendanceSelectionBox";
 import { useAuth } from "../handlers/UserContext";
 import { ageMap } from "../../assets/CmAgeMap";
 import { getBirthYear } from "../handlers/GetAttendanceId";
-import { dateTodayEightString } from "../handlers/GetAttendanceId";
+import { dateTodayEightString, lastSunday } from "../handlers/GetAttendanceId";
 import { getSelectClassFromLocalStorage } from "../handlers/TableValueHandlers";
 import LinearProgress from "@mui/material/LinearProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -34,12 +34,13 @@ export default function AttendanceTable() {
   const [dialogState, setDialogState] = useState(false);
   const [selectedName, setSelectedName] = useState(null);
   const currentUser = useAuth();
-  const [tableVal, setTableVal] = useState({});
+  const [tableVal, setTableVal] = useState({ name: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [attdLoad, setAttdLoad] = useState(false);
   const [alertState, setAlertState] = useState(false);
   const [attendanceId, setAttendanceId] = useState(
-    getSelectClassFromLocalStorage("FPP6") + dateTodayEightString(new Date())
+    getSelectClassFromLocalStorage("FPP6") +
+      dateTodayEightString(lastSunday(new Date()))
   );
 
   const handleAlertClose = (event, reason) => {
@@ -103,6 +104,7 @@ export default function AttendanceTable() {
               setTableVal(dict);
               setAttendanceId(id);
               setAttdLoad(true);
+              setIsLoaded(true);
             });
         }
       })
@@ -118,7 +120,7 @@ export default function AttendanceTable() {
   const OnAttendanceIdChange = (id) => {
     const mmyyyy = id.substring(6, 12);
     setAttdLoad(false);
-    //console.log(mmyyyy);
+    console.log("checking attendance change");
     //console.log("checking: ", id);
     db.collection("all-attendance")
       .doc(id)
@@ -133,6 +135,7 @@ export default function AttendanceTable() {
             .get()
             .then((doc) => {
               setTableVal(doc.data()[id]);
+              setIsLoaded(true);
             });
           setAttendanceId(id);
           setAttdLoad(true);
@@ -157,7 +160,6 @@ export default function AttendanceTable() {
   useEffect(() => {
     if (!isLoaded) {
       OnAttendanceIdChange(attendanceId);
-      setIsLoaded(true);
     }
   }, [isLoaded, attendanceId]);
 

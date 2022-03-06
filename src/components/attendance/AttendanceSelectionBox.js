@@ -5,7 +5,7 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
+import { db } from "../../base";
 import {
   getSelectClassFromLocalStorage,
   saveSelectClassToLocalStorage,
@@ -15,6 +15,8 @@ import {
   isSunday,
   dateTodayEightString,
 } from "../handlers/GetAttendanceId";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 const sessionMap = {
   FP: "1st Praise",
   FJ: "1st Jam",
@@ -29,7 +31,7 @@ const AttendanceSelectionBox = (props) => {
   const [selectVal, setSelectVal] = useState(
     getSelectClassFromLocalStorage("FPP6")
   );
-
+  const [alertState, setAlertState] = useState(false);
   const onSelect = (event) => {
     //console.log(event);
     setSelectVal(event);
@@ -37,13 +39,30 @@ const AttendanceSelectionBox = (props) => {
     assignAttendance(event, date);
   };
   const onSetDate = (value) => {
-    let date = new Date(value);
+    let thisDate = new Date(value);
     setDate(value);
-    if (dateTodayEightString(date).length === 8) {
-      assignAttendance(selectVal, date);
+    if (dateTodayEightString(thisDate).length === 8) {
+      if (isSunday(thisDate)) {
+        assignAttendance(selectVal, thisDate);
+        setAlertState(false);
+      } else {
+        db.collection("all-attendance")
+          .doc(selectVal + dateTodayEightString(thisDate))
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              assignAttendance(selectVal, thisDate);
+            } else {
+              setAlertState(true);
+            }
+          });
+      }
     }
   };
-
+  const createAnywayAlert = () => {
+    assignAttendance(selectVal, date);
+    setAlertState(false);
+  };
   return (
     <>
       <h1>{selectVal.substring(2, 4)}</h1>
@@ -65,6 +84,26 @@ const AttendanceSelectionBox = (props) => {
           </LocalizationProvider>
         </div>
       </div>
+      {alertState ? (
+        <Alert
+          severity="error"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                createAnywayAlert();
+              }}
+            >
+              CREATE ANYWAY
+            </Button>
+          }
+        >
+          Date selected is not on a Sunday!
+        </Alert>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

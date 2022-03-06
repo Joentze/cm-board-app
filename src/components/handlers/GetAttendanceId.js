@@ -8,7 +8,7 @@ export const getBirthYear = (age) => {
 };
 
 export const isSunday = (today) => {
-  if (today.getDay() === 6) {
+  if (today.getDay() === 0) {
     return true;
   } else {
     return false;
@@ -31,4 +31,10 @@ export const reformatDateFromInput = (dateString) => {
     slash: `${yyyymmdd[2]}/${yyyymmdd[1]}/${yyyymmdd[0]}`,
     noslash: `${yyyymmdd[2]}${yyyymmdd[1]}${yyyymmdd[0]}`,
   };
+};
+
+export const lastSunday = (today) => {
+  let noOfDaysAgo = today.getDay();
+  let last = new Date(today.getTime() - noOfDaysAgo * 24 * 60 * 60 * 1000);
+  return last;
 };
