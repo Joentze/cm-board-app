@@ -25,6 +25,14 @@ export const dateTodayEightString = (today) => {
   return date + month + year;
 };
 
+export const reformatDateFromInput = (dateString) => {
+  let yyyymmdd = dateString.split("-");
+  return {
+    slash: `${yyyymmdd[2]}/${yyyymmdd[1]}/${yyyymmdd[0]}`,
+    noslash: `${yyyymmdd[2]}${yyyymmdd[1]}${yyyymmdd[0]}`,
+  };
+};
+
 export const lastSunday = (today) => {
   let noOfDaysAgo = today.getDay();
   let last = new Date(today.getTime() - noOfDaysAgo * 24 * 60 * 60 * 1000);
