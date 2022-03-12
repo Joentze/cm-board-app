@@ -40,7 +40,7 @@ export default function AddButton({ attendanceId }) {
     db.collection("cm-kids-data")
       .doc(data.fullname)
       .set({
-        "full-name": data.fullname,
+        "full-name": data.fullname.toLowerCase(),
         "birth-date": slashDate,
         "parent-guardian": data.parentGuardian,
         "emergency-contact": { [data.emergencyContact]: data.contactNo },
@@ -56,6 +56,7 @@ export default function AddButton({ attendanceId }) {
     setTimeout(() => {
       setIsSearch(true);
       if (isSearch && event.target.value.trim().length > 0) {
+        console.log("searhing...");
         db.collection("cm-kids-data")
           .doc(event.target.value.trim())
           .get()

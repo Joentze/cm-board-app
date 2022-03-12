@@ -8,7 +8,7 @@ import SignUp from "./pages/Signup";
 import HomePage from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import DashboardPage from "./pages/Dashboard";
-
+import SearchCMPage from "./pages/SearchCM";
 function App() {
   return (
     <>
@@ -19,6 +19,7 @@ function App() {
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/login" element={<LoginPage />} />
             <Route exact path="/dashboard" element={<DashboardPage />} />
+            <Route exact path="/search" element={<SearchCMPage />} />
           </Routes>
         </Router>
       </FirebaseAuthData>
