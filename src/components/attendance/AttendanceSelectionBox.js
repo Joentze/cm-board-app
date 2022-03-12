@@ -13,6 +13,7 @@ import {
 import {
   getBirthYear,
   isSunday,
+  lastSunday,
   dateTodayEightString,
 } from "../handlers/GetAttendanceId";
 import Alert from "@mui/material/Alert";
@@ -27,7 +28,7 @@ const sessionMap = {
 };
 const AttendanceSelectionBox = (props) => {
   const { assignAttendance } = props;
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(lastSunday(new Date()));
   const [selectVal, setSelectVal] = useState(
     getSelectClassFromLocalStorage("FPP6")
   );
