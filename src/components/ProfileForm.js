@@ -40,10 +40,6 @@ const ProfileForm = () => {
       });
   };
 
-  const handleSelect = (data) => {
-    ////console.log"select change", data);
-  };
-
   return (
     <>
       <form onSubmit={handleSubmit(handleForm)}>
