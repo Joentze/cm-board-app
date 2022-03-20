@@ -3,6 +3,7 @@ import { db } from "../base";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AttendanceTable from "../components/attendance/AttendanceTable";
+import { NoAccess } from "../components/NoAccess";
 import {
   getBirthYear,
   isSunday,
@@ -34,6 +35,7 @@ const DashboardPage = () => {
         </>
       ) : (
         <>
+          <NoAccess />
           <h1>no access</h1>
         </>
       )}

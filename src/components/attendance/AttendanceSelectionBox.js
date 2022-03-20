@@ -6,6 +6,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
 import { db } from "../../base";
+import AddButton from "./AddButton";
 import {
   getSelectClassFromLocalStorage,
   saveSelectClassToLocalStorage,
@@ -70,6 +71,7 @@ const AttendanceSelectionBox = (props) => {
     <>
       <h1>{selectVal.substring(2, 4)}</h1>
       <p>{sessionMap[selectVal.substring(0, 2)]}</p>
+      <AddButton />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <AttendanceSessionSelect setSel={onSelect} />
         <div style={{ marginTop: "8px" }}>

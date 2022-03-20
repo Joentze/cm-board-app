@@ -21,14 +21,14 @@ const SearchBarCM = () => {
             let thisList = [];
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
-              thisList.push(doc.data());
+              thisList.push({ id: doc.id, ...doc.data() });
             });
             setSearchResult(thisList);
           });
       } else if (name.length == 0) {
         setSearchResult([]);
       }
-    }, 200);
+    }, 100);
   };
   return (
     <>
@@ -46,10 +46,10 @@ const SearchBarCM = () => {
           label="Name Search"
           variant="standard"
         />
+        {searchResult.map((item) => {
+          return <p style={{ marginTop: "10px" }}>{item["id"]}</p>;
+        })}
       </Box>
-      {searchResult.map((item) => {
-        return <h4>{item["full-name"]}</h4>;
-      })}
     </>
   );
 };
